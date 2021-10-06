@@ -4,12 +4,9 @@
 """
 
 
-import logging.config
-import yaml
+from download_logger_config import set_config_logger
 
-
-logger = logging.getLogger(__name__)
-logger.debug('This is a debug message')
+logger = set_config_logger()
 
 
 class TicTacToe:
@@ -47,6 +44,7 @@ class TicTacToe:
         self.player_2 = player_2
         self.game_score[player_1] = 0
         self.game_score[player_2] = 0
+        logger.info("User_1 has name %s, user_2 has name %s", self.player_1, self.player_2)
 
     def ask_name_players(self):
         """
@@ -93,7 +91,9 @@ class TicTacToe:
                 self.make_move(self.player_2, '0')
 
             if self.counter_movements == 9:
-                print('Nobody win')
+                message = 'Nobody win'
+                print(message)
+                logger.info(message)
                 continue_game = TicTacToe.define_continue_game()
                 if continue_game:
                     self.update_variables_for_new_game()
@@ -104,6 +104,7 @@ class TicTacToe:
                 message = f"Current game was won by player: {self.winner}"
                 print(message)
                 logger.info(message)
+                logger.info('The count between two players: %s', self.game_score)
                 continue_game = TicTacToe.define_continue_game()
                 if continue_game:
                     self.game_score[self.winner] += 1
@@ -125,6 +126,7 @@ class TicTacToe:
         except ValueError as ex:
             self.counter_movements -= 1
             print(ex)
+            logger.error(ex)
         self.winner = self.check_winner()
         self.counter_movements += 1
 
@@ -173,6 +175,7 @@ class TicTacToe:
         """
 
         self.board = ['-' for _ in self.board]
+        logger.info('Game table was refreshed')
 
     @staticmethod
     def look_log():
@@ -192,6 +195,7 @@ class TicTacToe:
 
         with open('tic_tac_toe.log', 'w'):
             pass
+        logger.info("The log was cleaned")
 
 
 def show_menu():
@@ -208,27 +212,18 @@ def show_menu():
                             "2-Look through the log\n "
                             "3-Clean the log of victories \n "
                             "4-Exit\n "))
-        except ValueError:
+        except ValueError as ex:
             print("You should choose one option")
+            logger.error(ex)
             continue
+        logger.info("User choose the option from menu: %s", str(choice))
         game.controller(choice)
-
-
-def set_config_logger():
-    """
-    Read and set configuration for logger from config file
-    """
-
-    with open('config_logger.yaml', 'r') as file:
-        config = yaml.safe_load(file.read())
-        logging.config.dictConfig(config)
 
 
 def main():
     """
-    Point of entry for game
+    Entry point for game
     """
-    set_config_logger()
     show_menu()
 
 

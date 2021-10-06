@@ -9,7 +9,7 @@ handlers:
     formatter: simple
     level: INFO
     filename: tic_tac_toe.log
-    maxBytes: 1024
+    maxBytes: 8000
     backupCount: 150
 loggers:
   sampleLogger:
