@@ -79,9 +79,13 @@ class LinkedList:
         """
         Insert an element at a specific index with shift elements to the right.
         """
-        count = 0
-        if self.head is None and index == 0:
+        if index > 0 and self.head is None:
+            raise IndexError("Your index exceed length of linked list")
+        if index == 0:
+            next_node = self.head
             self.head = data
+            self.head.next = next_node
+        count = 0
         start_node = self.head
         while count < index-1 and start_node is not None:
             start_node = start_node.next

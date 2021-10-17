@@ -51,6 +51,9 @@ class HashTable:
         """
         Add item with key to hash table.
         """
+        if new_node.key == self.lookup(new_node.key):
+            raise KeyError("Hash table contains such key. Please choose other one")
+
         if self.linked_list.head is None:
             self.linked_list.head = new_node
             self.linked_list.head.key = self.hash_func(new_node.key)
@@ -77,7 +80,6 @@ class HashTable:
         """
         current_head = self.linked_list.head
         hash_key = self.hash_func(key)
-
         while current_head:
             if current_head.key == hash_key:
                 return current_head.value
